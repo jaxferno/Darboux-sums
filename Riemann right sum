@@ -212,7 +212,6 @@ draw(0, 0)
 
 
 
-
 wn.onclick(draw) 
 wn.onkey(wn.bye, "q")
 wn.listen() 
