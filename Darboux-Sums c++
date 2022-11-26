@@ -1,0 +1,171 @@
+#include <iostream>
+#include <cmath>
+#include <iomanip>
+#include <Windows.h>
+
+using namespace std;
+
+long double e = 2.71828182845904523536;
+
+long double f(long double x) {                // function
+    return pow(e, x);
+
+}
+
+long double F(long double x) {               // antiderivative
+    return pow(e, x);
+
+}
+
+int main()
+{
+    ::SendMessage(::GetConsoleWindow(), WM_SYSKEYDOWN, VK_RETURN, 0x20000000);
+    cout << " ______    ___   _______  __   __  _______  __    _  __    _       _______  __   __  __   __  _______ " << endl;
+    cout << "|    _ |  |   | |       ||  |_|  ||   _   ||  |  | ||  |  | |     |       ||  | |  ||  |_|  ||       |" << endl;
+    cout << "|   | ||  |   | |    ___||       ||  |_|  ||   |_| ||   |_| |     |  _____||  | |  ||       ||  _____|" << endl;
+    cout << "|   |_||_ |   | |   |___ |       ||       ||       ||       |     | |_____ |  |_|  ||       || |_____ " << endl;
+    cout << "|    __  ||   | |    ___||       ||       ||  _    ||  _    |     |_____  ||       ||       ||_____  |" << endl;
+    cout << "|   |  | ||   | |   |___ | ||_|| ||   _   || | |   || | |   |      _____| ||       || ||_|| | _____| |" << endl;
+    cout << "|___|  |_||___| |_______||_|   |_||__| |__||_|  |__||_|  |__|     |_______||_______||_|   |_||_______|" << endl;
+    cout << "Number e is: 2.71828182845904523536" << endl << endl;
+    int n;
+    long double  a, b;
+
+
+    char answer;
+    do
+    {
+        cout << endl;
+        cout << "Number of subdivisions = ";
+        cin >> n;
+        cout << endl;
+        switch (n)
+        {
+        default:
+        {
+            cout << "Enter the interval [a,b] !" << endl;
+            cout << "a = ";
+            cin >> a;
+
+            cout << "b = ";
+            cin >> b;
+            cout << endl;
+            long double step = (b - a) / n;
+            long double s = 0;          //s= value for Left Riemann sum
+            long double Exact_Integral = F(b) - F(a);
+            cout << endl;
+            cout << "Exact integral:" << setprecision(15) << Exact_Integral << endl << endl;
+
+            for (int i = 0; i < n; ++i)
+            {
+                s += (f(a + i * step) * step);//We calculate the left sum
+                cout << "Subdivision number " << i + 1 << " for the left sum is: " << f(a + i * step) * step << endl;
+            }
+            cout << endl;
+            cout << "Left Riemann sum is: " << setprecision(15) << s << endl << endl;
+            long double Leftsum_error = Exact_Integral - s;
+            cout << "Left Riemann sum error is: " << setprecision(15) << Leftsum_error << endl << endl;
+
+            long double S = 0;           //S= value for Right Riemann sum
+            for (int i = 1; i <= n; i++)
+            {
+                S += (f(a + i * step) * step);      //We calculate the right sum
+                cout << "Subdivision number " << i << " for the right sum is: " << f(a + i * step) * step << endl;
+            }
+            cout << endl;
+            cout << "Right Riemann sum is: " << setprecision(15) << S << endl << endl;
+            long double Rightsum_error = Exact_Integral - S;
+            cout << "Right Riemann sum error is: " << setprecision(15) << Rightsum_error << endl << endl;
+
+            long double TrapezoidalSum = 0;
+            for (int j = 1; j <= n; j++)
+            {
+                TrapezoidalSum += (1.0 / 2.0) * (step) * (f(a + (j - 1) * step) + f(a + j * step));//We calculate the Trapezoidal sum
+                cout << "Subdivision number " << j << " for the trapezoidal sum is: " << (step) * (f(a + (j - 1) * step) + f(a + j * step)) << endl;
+            }
+            cout << endl;
+            cout << "Trapezoidal sum is: " << setprecision(15) << TrapezoidalSum << endl << endl;
+            long double TrapezoidalSum_error = Exact_Integral - TrapezoidalSum;
+            cout << "Trapezoidal sum error is: " << setprecision(15) << TrapezoidalSum_error << endl << endl;
+
+            cout << "What is the absolute value between Left and Right Riemann sum?" << endl<<endl;
+            system("pause");
+            cout << endl << endl;
+            long double Absolute_value = 0;
+            Absolute_value = S - s;
+            if (Absolute_value < 0)cout << "The absolute value between Left and Right Riemann sum is: " << setprecision(15) << Absolute_value * (-1) << endl << endl;
+            else cout << "The absolute value between Left and Right Riemann sum is: " << setprecision(15) << Absolute_value << endl << endl;
+            cout << "Check if the function is Riemann integrable for a certain epsilon!" << endl<<endl;
+            system("pause");
+            cout << endl;
+            /*  Alternative code for integrability verification, the better one :)
+            cout << "Enter epsilon: ";
+            double epsilon;
+            cin >> epsilon;
+            cout << endl;
+            if (epsilon > Absolute_value)cout << "YES, the function is Riemann integrable!"<<static_cast<char>(1) << endl << endl;
+            else cout << "NO, the function isn't Riemann integrable!  :-(" << endl << endl;*/
+            char ch;
+            do
+            {
+                int epsilon;
+                cout << endl;
+                cout << "Enter epsilon: ";
+                cin >> epsilon;
+                switch (epsilon)
+                {
+                case 0:
+                {
+                    cout << endl;
+                    cout << "NO, the function isn't Riemann integrable!  :-(" << endl << endl;
+                    break;
+                }
+                default:
+                {
+                    cout << endl;
+                    cout << "YES, the function is Riemann integrable! :-)" << endl << endl;
+                    break;
+                }
+                }
+                cout << "Try for a new epsilon? " << static_cast<char>(1) << " (Y / N)";
+                cin >> ch;
+                cout << endl;
+            } while (ch == 'Y' or ch == 'y');
+            system("pause");
+            cout << endl << endl;
+            cout << "Which is the complexity of the algorithm?" << endl<<endl;
+            system("pause");
+            cout << endl << endl;
+            cout << "The complexity of the algorithm is: O(n)" << endl << endl;
+        }
+        }
+        cout << "Try for a new number of subdivisions? " << static_cast<char>(1) << " (Y / N)";
+        cin >> answer;
+    } while (answer == 'Y' or answer == 'y');
+    system("pause");
+
+    cout << endl<<endl;
+    cout << " _______  __   __  _______  __    _  ___   _  _______  __   __   __ " << endl;
+    cout << "|       ||  | |  ||   _   ||  |  | ||   | | ||       ||  | |  | |  |" << endl;
+    cout << "|_     _||  |_|  ||  |_|  ||   |_| ||   |_| ||  _____||  | |  | |  | " << endl;
+    cout << "  |   |  |       ||       ||       ||      _|| |_____ |  | |  | |  | " << endl;
+    cout << "  |   |  |       ||       ||  _    ||     |_ |_____  ||__| |__| |__| " << endl;
+    cout << "  |   |  |   _   ||   _   || | |   ||    _  | _____| | __   __   __  " << endl;
+    cout << "  |___|  |__| |__||__| |__||_|  |__||___| |_||_______||__| |__| |__|" << endl<<endl;
+    /*cout << " _______  ______    _______  __   __  _______  ______   _______       _______  ___      _______  __   __  _______  __    _  ______   ______    __   __ " << endl;
+    cout << "|       ||    _ |  |   _   ||  |_|  ||   _   ||      | |   _   |    |   _   ||   |    |       ||  |_|  ||   _   ||  |  | ||      | |    _ |  |  | |  |" << endl;
+    cout << "|    ___||   | ||  |  |_|  ||       ||  |_|  ||  _    ||  |_|  |    |  |_|  ||   |    |    ___||       ||  |_|  ||   |_| ||  _    ||   | ||  |  | |  |" << endl;
+    cout << "|   | __ |   |_||_ |       ||       ||       || | |   ||       |    |       ||   |    |   |___ |       ||       ||       || | |   ||   |_||_ |  |_|  |" << endl;
+    cout << "|   ||  ||    __  ||       ||       ||       || |_|   ||       |    |       ||   |___ |    ___| |     | |       ||  _    || |_|   ||    __  ||       |" << endl;
+    cout << "|   |_| ||   |  | ||   _   || ||_|| ||   _   ||       ||   _   |    |   _   ||       ||   |___ |   _   ||   _   || | |   ||       ||   |  | ||       |" << endl;
+    cout << "|_______||___|  |_||__| |__||_|   |_||__| |__||______| |__| |__|    |__| |__||_______||_______||__| |__||__| |__||_|  |__||______| |___|  |_||_______|" << endl<<endl;
+    cout << " _______  _______  _______  _______  __   __        _______  ___      _______  __   __  _______  __    _  ______   ______    __   __ " << endl;
+    cout << "|       ||       ||       ||       ||  | |  |      |   _   ||   |    |       ||  |_|  ||   _   ||  |  | ||      | |    _ |  |  | |  |" << endl;
+    cout << "|  _____||_     _||    ___||    ___||  | |  |      |  |_|  ||   |    |    ___||       ||  |_|  ||   |_| ||  _    ||   | ||  |  | |  |" << endl;
+    cout << "| |_____   |   |  |   |___ |   |___ |  |_|  |      |       ||   |    |   |___ |       ||       ||       || | |   ||   |_||_ |  |_|  |" << endl;
+    cout << "|_____  |  |   |  |    ___||    ___||       |      |       ||   |___ |    ___| |     | |       ||  _    || |_|   ||    __  ||       |" << endl;
+    cout << " _____| |  |   |  |   |___ |   |    |       |      |   _   ||       ||   |___ |   _   ||   _   || | |   ||       ||   |  | ||      ||" << endl;
+    cout << "|_______|  |___|  |_______||___|    |_______|      |__| |__||_______||_______||__| |__||__| |__||_|  |__||______| |___|  |_||_______|" << endl<<endl;*/
+
+    return 0;
+}
